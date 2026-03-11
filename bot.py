@@ -1,13 +1,12 @@
-```python
 import discord
 from discord.ext import commands
 import random
 import os
 
-# On récupère le token depuis Railway
+# Récupération du token depuis Railway
 TOKEN = os.getenv("TOKEN")
 
-# Intents pour lire les messages
+# Intents nécessaires
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -19,17 +18,17 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # =====================
 
 hugs = [
-    "https://media.giphy.com/media/od5H3PmEG5EVq/giphy.gif",
-    "https://media.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif",
-    "https://media.giphy.com/media/svXXBgduBsJ1u/giphy.gif",
-    "https://media.giphy.com/media/3oEdv4hwWTzBhWvaU0/giphy.gif"
+"https://media.giphy.com/media/od5H3PmEG5EVq/giphy.gif",
+"https://media.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif",
+"https://media.giphy.com/media/svXXBgduBsJ1u/giphy.gif",
+"https://media.giphy.com/media/3oEdv4hwWTzBhWvaU0/giphy.gif"
 ]
 
 smiles = [
-    "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
-    "https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif",
-    "https://media.giphy.com/media/l4FGI8GoTL7N4DsyI/giphy.gif",
-    "https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif"
+"https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
+"https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif",
+"https://media.giphy.com/media/l4FGI8GoTL7N4DsyI/giphy.gif",
+"https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif"
 ]
 
 # =====================
@@ -44,7 +43,7 @@ async def on_ready():
 # COMMANDES
 # =====================
 
-# !hug
+# Commande !hug
 @bot.command()
 async def hug(ctx, member: discord.Member):
     gif = random.choice(hugs)
@@ -52,7 +51,7 @@ async def hug(ctx, member: discord.Member):
     await ctx.send(message)
     await ctx.send(gif)
 
-# !smile
+# Commande !smile
 @bot.command()
 async def smile(ctx, member: discord.Member):
     gif = random.choice(smiles)
@@ -60,9 +59,5 @@ async def smile(ctx, member: discord.Member):
     await ctx.send(message)
     await ctx.send(gif)
 
-# =====================
-# LANCEMENT
-# =====================
-
+# Lancement du bot
 bot.run(TOKEN)
-```
