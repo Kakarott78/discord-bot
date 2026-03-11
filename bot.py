@@ -1,3 +1,4 @@
+
 import discord
 from discord.ext import commands
 import random
@@ -32,10 +33,17 @@ smiles = [
 ]
 
 slaps = [
-"https://static.klipy.com/ii/f87f46a2c5aeaeed4c68910815f73eaf/6c/76/LjmbXUjH.gif",
-"https://static.klipy.com/ii/4e7bea9f7a3371424e6c16ebc93252fe/76/28/p4wVNMWzErS2h.gif",
-"https://static.klipy.com/ii/4e7bea9f7a3371424e6c16ebc93252fe/95/7a/NqbXLkqTL7iDs.gif",
-"https://static.klipy.com/ii/f87f46a2c5aeaeed4c68910815f73eaf/4b/2d/yQGkkMtg.gif"
+"https://media.giphy.com/media/jLeyZWgtwgr2U/giphy.gif",
+"https://media.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif",
+"https://media.giphy.com/media/Zau0yrl17uzdK/giphy.gif",
+"https://media.giphy.com/media/mEtSQlxqBtWWA/giphy.gif"
+]
+
+cries = [
+"https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif",
+"https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif",
+"https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif",
+"https://media.giphy.com/media/L95W4wv8nnb9K/giphy.gif"
 ]
 
 # =====================
@@ -85,6 +93,19 @@ async def slap(ctx, member: discord.Member = None):
         message = f"{ctx.author.mention} Donne une claque à {member.mention} !"
     else:
         message = f"{ctx.author.mention} donne une claque dans le vide."
+
+    await ctx.send(message)
+    await ctx.send(gif)
+
+# !cry
+@bot.command()
+async def cry(ctx, member: discord.Member = None):
+    gif = random.choice(cries)
+
+    if member:
+        message = f"{ctx.author.mention} Pleure pour {member.mention}..."
+    else:
+        message = f"{ctx.author.mention} Pleure..."
 
     await ctx.send(message)
     await ctx.send(gif)
