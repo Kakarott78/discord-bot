@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 import random
@@ -19,17 +18,19 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # =====================
 
 hugs = [
-"https://media.giphy.com/media/od5H3PmEG5EVq/giphy.gif",
-"https://media.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif",
+"https://static.klipy.com/ii/935d7ab9d8c6202580a668421940ec81/9b/b4/fIkDNb6B.gif",
+"https://static.klipy.com/ii/7607a26399874a14744aa5e7accfa062/b4/b4/tXYJWuWJ.gif",
 "https://media.giphy.com/media/svXXBgduBsJ1u/giphy.gif",
-"https://media.giphy.com/media/3oEdv4hwWTzBhWvaU0/giphy.gif"
+"https://static.klipy.com/ii/da290b156d64898341638f3c299e7478/0f/b6/9Hw0gnCu.gif",
+"https://static.klipy.com/ii/8ce8357c78ea940b9c2015daf05ce1a5/89/01/FcplPCAE.gif"
 ]
 
 smiles = [
-"https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif",
-"https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif",
-"https://media.giphy.com/media/l4FGI8GoTL7N4DsyI/giphy.gif",
-"https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif"
+"https://static.klipy.com/ii/84b4c0b02782dda9051003f9e36484ec/64/c0/weFE0GJI.gif",
+"https://static.klipy.com/ii/da290b156d64898341638f3c299e7478/0e/9b/U2jZgDi3.gif",
+"https://static.klipy.com/ii/ce286d05b8e1a47cd4f32b0e1b6dec0e/e2/e5/3FyjzI4z.gif",
+"https://static.klipy.com/ii/35ccce3d852f7995dd2da910f2abd795/0b/75/V6Ovsu0h.gif",
+"https://static.klipy.com/ii/9ed0121ed465c12e1f3dda331ed33f0e/76/9b/W9OPNyQAg2ZxhZH.gif"
 ]
 
 # =====================
