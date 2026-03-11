@@ -47,14 +47,16 @@ async def on_ready():
 
 # !hug
 @bot.command()
-async def hug(ctx):
+async def hug(ctx, member: discord.Member):
     gif = random.choice(hugs)
+    await ctx.send(f"{ctx.author.mention} fait un gros calin a {member.mention}")
     await ctx.send(gif)
 
 # !smile
 @bot.command()
-async def smile(ctx):
+async def smile(ctx, member: discord.Member):
     gif = random.choice(smiles)
+    await ctx.send(f"{ctx.author.mention} sourit pour {member.mention}")
     await ctx.send(gif)
 
 # =====================
