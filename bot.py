@@ -1,9 +1,10 @@
+
 import discord
 from discord.ext import commands
 import random
 import os
 
-# Récupération du token depuis Railway
+# Récupération du token depuis Railway ou ton PC
 TOKEN = os.getenv("TOKEN")
 
 # Intents nécessaires
@@ -43,21 +44,34 @@ async def on_ready():
 # COMMANDES
 # =====================
 
-# Commande !hug
+# !hug
 @bot.command()
-async def hug(ctx, member: discord.Member):
+async def hug(ctx, member: discord.Member = None):
     gif = random.choice(hugs)
-    message = f"{ctx.author.mention} Fait un gros câlin à {member.mention} !"
+
+    if member:
+        message = f"{ctx.author.mention} Fait un gros câlin à {member.mention} !"
+    else:
+        message = f"{ctx.author.mention} Fait un gros câlin."
+
     await ctx.send(message)
     await ctx.send(gif)
 
-# Commande !smile
+# !smile
 @bot.command()
-async def smile(ctx, member: discord.Member):
+async def smile(ctx, member: discord.Member = None):
     gif = random.choice(smiles)
-    message = f"{ctx.author.mention} Sourit pour {member.mention} !"
+
+    if member:
+        message = f"{ctx.author.mention} Sourit pour {member.mention} !"
+    else:
+        message = f"{ctx.author.mention} Sourit"
+
     await ctx.send(message)
     await ctx.send(gif)
 
-# Lancement du bot
+# =====================
+# LANCEMENT
+# =====================
+
 bot.run(TOKEN)
