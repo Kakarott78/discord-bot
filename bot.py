@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 import random
@@ -50,10 +49,10 @@ cries = [
 ]
 
 pats = [
-"https://media.giphy.com/media/ARSp9T7wwxNcs/giphy.gif",
-"https://media.giphy.com/media/109ltuoSQT212w/giphy.gif",
-"https://media.giphy.com/media/ye7OTQgwmVuVy/giphy.gif",
-"https://media.giphy.com/media/L2z7dnOduqEow/giphy.gif"
+"https://static.klipy.com/ii/e293a233a303a98e471f78d04e13a1b0/0b/b0/Slgsc0jU.gif",
+"https://static.klipy.com/ii/2711dd8a75a85be822d136ec94899b3f/ec/4d/45TvCmKY.gif",
+"https://static.klipy.com/ii/e293a233a303a98e471f78d04e13a1b0/d3/81/m4XJV7yq.gif",
+"https://static.klipy.com/ii/a15b48460c436e1e92c85ffc680932cc/01/76/9iMmxloS.gif"
 ]
 
 # =====================
