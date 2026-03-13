@@ -1,3 +1,4 @@
+
 import discord
 from discord.ext import commands
 import random
@@ -46,6 +47,13 @@ cries = [
 "https://static.klipy.com/ii/e293a233a303a98e471f78d04e13a1b0/d2/92/DKYVyKRl.gif",
 "https://static.klipy.com/ii/35ccce3d852f7995dd2da910f2abd795/fd/56/CUZlujdn.gif",
 "https://static.klipy.com/ii/71b2873e478b9d8d0482ea3ec777ba7f/3c/42/CVzgVx4J.gif"
+]
+
+pats = [
+"https://media.giphy.com/media/ARSp9T7wwxNcs/giphy.gif",
+"https://media.giphy.com/media/109ltuoSQT212w/giphy.gif",
+"https://media.giphy.com/media/ye7OTQgwmVuVy/giphy.gif",
+"https://media.giphy.com/media/L2z7dnOduqEow/giphy.gif"
 ]
 
 # =====================
@@ -108,6 +116,19 @@ async def cry(ctx, member: discord.Member = None):
         message = f"{ctx.author.mention} Pleure pour {member.mention}..."
     else:
         message = f"{ctx.author.mention} Pleure..."
+
+    await ctx.send(message)
+    await ctx.send(gif)
+
+# !pat
+@bot.command()
+async def pat(ctx, member: discord.Member = None):
+    gif = random.choice(pats)
+
+    if member:
+        message = f"{ctx.author.mention} Tapote {member.mention} !"
+    else:
+        message = f"{ctx.author.mention} Tapote."
 
     await ctx.send(message)
     await ctx.send(gif)
