@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 import random
@@ -63,81 +62,125 @@ pats = [
 @bot.event
 async def on_ready():
     print(f"Connecté en tant que {bot.user}")
+    await bot.tree.sync()
 
 # =====================
-# COMMANDES
+# COMMANDES !
 # =====================
 
-# !hug
 @bot.command()
 async def hug(ctx, member: discord.Member = None):
     gif = random.choice(hugs)
-
     if member:
         message = f"{ctx.author.mention} Fait un gros câlin à {member.mention} !"
     else:
         message = f"{ctx.author.mention} Fait un gros câlin."
-
     await ctx.send(message)
     await ctx.send(gif)
 
-# !smile
 @bot.command()
 async def smile(ctx, member: discord.Member = None):
     gif = random.choice(smiles)
-
     if member:
         message = f"{ctx.author.mention} Sourit pour {member.mention} !"
     else:
         message = f"{ctx.author.mention} Sourit."
-
     await ctx.send(message)
     await ctx.send(gif)
 
-# !slap
 @bot.command()
 async def slap(ctx, member: discord.Member = None):
     gif = random.choice(slaps)
-
     if member:
         message = f"{ctx.author.mention} Donne une claque à {member.mention} !"
     else:
         message = f"{ctx.author.mention} donne une claque dans le vide."
-
     await ctx.send(message)
     await ctx.send(gif)
 
-# !cry
 @bot.command()
 async def cry(ctx, member: discord.Member = None):
     gif = random.choice(cries)
-
     if member:
         message = f"{ctx.author.mention} Pleure pour {member.mention}..."
     else:
         message = f"{ctx.author.mention} Pleure..."
-
     await ctx.send(message)
     await ctx.send(gif)
 
-# !pat
 @bot.command()
 async def pat(ctx, member: discord.Member = None):
     gif = random.choice(pats)
-
     if member:
         message = f"{ctx.author.mention} Tapote {member.mention} !"
     else:
         message = f"{ctx.author.mention} Tapote."
-
     await ctx.send(message)
     await ctx.send(gif)
 
-# !coinflip
 @bot.command()
 async def coinflip(ctx):
     result = random.choice(["Pile !", "Face !"])
     await ctx.send(result)
+
+# =====================
+# COMMANDES /
+# =====================
+
+@bot.tree.command(name="hug", description="Faire un câlin")
+async def hug_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(hugs)
+    if member:
+        message = f"{interaction.user.mention} Fait un gros câlin à {member.mention} !"
+    else:
+        message = f"{interaction.user.mention} Fait un gros câlin."
+    await interaction.response.send_message(message)
+    await interaction.followup.send(gif)
+
+@bot.tree.command(name="smile", description="Sourire")
+async def smile_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(smiles)
+    if member:
+        message = f"{interaction.user.mention} Sourit pour {member.mention} !"
+    else:
+        message = f"{interaction.user.mention} Sourit."
+    await interaction.response.send_message(message)
+    await interaction.followup.send(gif)
+
+@bot.tree.command(name="slap", description="Donner une claque")
+async def slap_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(slaps)
+    if member:
+        message = f"{interaction.user.mention} Donne une claque à {member.mention} !"
+    else:
+        message = f"{interaction.user.mention} donne une claque dans le vide."
+    await interaction.response.send_message(message)
+    await interaction.followup.send(gif)
+
+@bot.tree.command(name="cry", description="Pleurer")
+async def cry_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(cries)
+    if member:
+        message = f"{interaction.user.mention} Pleure pour {member.mention}..."
+    else:
+        message = f"{interaction.user.mention} Pleure..."
+    await interaction.response.send_message(message)
+    await interaction.followup.send(gif)
+
+@bot.tree.command(name="pat", description="Tapoter quelqu'un")
+async def pat_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(pats)
+    if member:
+        message = f"{interaction.user.mention} Tapote {member.mention} !"
+    else:
+        message = f"{interaction.user.mention} Tapote."
+    await interaction.response.send_message(message)
+    await interaction.followup.send(gif)
+
+@bot.tree.command(name="coinflip", description="Pile ou face")
+async def coinflip_slash(interaction: discord.Interaction):
+    result = random.choice(["Pile !", "Face !"])
+    await interaction.response.send_message(result)
 
 # =====================
 # LANCEMENT
