@@ -1,3 +1,4 @@
+
 import discord
 from discord.ext import commands
 import random
@@ -131,6 +132,12 @@ async def pat(ctx, member: discord.Member = None):
 
     await ctx.send(message)
     await ctx.send(gif)
+
+# !coinflip
+@bot.command()
+async def coinflip(ctx):
+    result = random.choice(["Pile !", "Face !"])
+    await ctx.send(result)
 
 # =====================
 # LANCEMENT
