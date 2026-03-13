@@ -66,7 +66,7 @@ async def on_ready():
     print(f"Connecté en tant que {bot.user}")
 
 # =====================
-# COMMANDES
+# COMMANDES !
 # =====================
 
 @bot.command()
@@ -140,32 +140,62 @@ async def coinflip(ctx):
     await ctx.send(f"La pièce tombe sur : **{result}**")
 
 # =====================
-# COMMANDE LOVE IMAGE
+# COMMANDES /
 # =====================
 
-@bot.tree.command(name="love", description="Voir la compatibilité entre deux personnes")
+@bot.tree.command(name="hug", description="Faire un câlin")
+async def hug_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(hugs)
+
+    if member:
+        message = f"{interaction.user.mention} Fait un gros câlin à {member.mention} !"
+    else:
+        message = f"{interaction.user.mention} Fait un gros câlin."
+
+    await interaction.response.send_message(message)
+    await interaction.channel.send(gif)
+
+
+@bot.tree.command(name="smile", description="Sourire")
+async def smile_slash(interaction: discord.Interaction, member: discord.Member = None):
+    gif = random.choice(smiles)
+
+    if member:
+        message = f"{interaction.user.mention} Sourit pour {member.mention} !"
+    else:
+        message = f"{interaction.user.mention} Sourit."
+
+    await interaction.response.send_message(message)
+    await interaction.channel.send(gif)
+
+
+@bot.tree.command(name="coinflip", description="Lancer une pièce")
+async def coinflip_slash(interaction: discord.Interaction):
+    result = random.choice(["Pile", "Face"])
+    await interaction.response.send_message(f"La pièce tombe sur : **{result}**")
+
+
+# =====================
+# LOVE IMAGE
+# =====================
+
+@bot.tree.command(name="love", description="Compatibilité entre deux personnes")
 async def love(interaction: discord.Interaction, user1: discord.Member, user2: discord.Member):
 
-    percent = random.randint(0, 100)
+    percent = random.randint(0,100)
 
     async with aiohttp.ClientSession() as session:
         async with session.get(user1.display_avatar.url) as r:
-            avatar1 = Image.open(BytesIO(await r.read())).resize((180,180)).convert("RGBA")
+            avatar1 = Image.open(BytesIO(await r.read())).resize((200,200)).convert("RGBA")
 
         async with session.get(user2.display_avatar.url) as r:
-            avatar2 = Image.open(BytesIO(await r.read())).resize((180,180)).convert("RGBA")
+            avatar2 = Image.open(BytesIO(await r.read())).resize((200,200)).convert("RGBA")
 
-    width = 800
-    height = 300
+    width = 900
+    height = 350
 
-    background = Image.new("RGBA",(width,height),(0,0,0,0))
+    background = Image.new("RGBA",(width,height),(40,80,180))
     draw = ImageDraw.Draw(background)
-
-    for y in range(height):
-        r = int(80 + (y/height)*40)
-        g = int(120 + (y/height)*60)
-        b = 200
-        draw.line((0,y,width,y),fill=(r,g,b))
 
     def round_avatar(img):
         mask = Image.new("L", img.size, 0)
@@ -179,25 +209,25 @@ async def love(interaction: discord.Interaction, user1: discord.Member, user2: d
     avatar1 = round_avatar(avatar1)
     avatar2 = round_avatar(avatar2)
 
-    background.paste(avatar1,(80,60),avatar1)
-    background.paste(avatar2,(540,60),avatar2)
+    background.paste(avatar1,(100,75),avatar1)
+    background.paste(avatar2,(600,75),avatar2)
 
-    heart = Image.new("RGBA",(140,120),(0,0,0,0))
+    heart = Image.new("RGBA",(180,160),(0,0,0,0))
     heart_draw = ImageDraw.Draw(heart)
 
     heart_draw.polygon([
-        (70,110),
-        (10,50),
-        (30,10),
-        (70,40),
-        (110,10),
-        (130,50)
+        (90,150),
+        (20,70),
+        (45,20),
+        (90,55),
+        (135,20),
+        (160,70)
     ], fill=(255,80,120))
 
-    background.paste(heart,(330,90),heart)
+    background.paste(heart,(360,100),heart)
 
     try:
-        font = ImageFont.truetype("arial.ttf",40)
+        font = ImageFont.truetype("arial.ttf",70)
     except:
         font = ImageFont.load_default()
 
@@ -206,7 +236,7 @@ async def love(interaction: discord.Interaction, user1: discord.Member, user2: d
     bbox = draw.textbbox((0,0),text,font=font)
     tw = bbox[2]-bbox[0]
 
-    draw.text((400-tw/2,130),text,fill="white",font=font)
+    draw.text((450 - tw/2,170),text,fill="white",font=font)
 
     buffer = BytesIO()
     background.save(buffer,"PNG")
