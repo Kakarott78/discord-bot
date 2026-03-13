@@ -1,11 +1,11 @@
-
 import discord
 from discord.ext import commands
+from discord import app_commands
 import random
 import os
-from PIL import Image, ImageDraw
 import aiohttp
-import io
+from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
 
 TOKEN = os.getenv("TOKEN")
 
@@ -13,6 +13,10 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+# =====================
+# GIFS
+# =====================
 
 hugs = [
 "https://static.klipy.com/ii/935d7ab9d8c6202580a668421940ec81/9b/b4/fIkDNb6B.gif",
@@ -52,106 +56,168 @@ pats = [
 "https://static.klipy.com/ii/a15b48460c436e1e92c85ffc680932cc/01/76/9iMmxloS.gif"
 ]
 
+# =====================
+# BOT READY
+# =====================
+
 @bot.event
 async def on_ready():
-    print(f"Connecté en tant que {bot.user}")
     await bot.tree.sync()
+    print(f"Connecté en tant que {bot.user}")
 
-@bot.tree.command(name="hug", description="Faire un câlin")
-async def hug(interaction: discord.Interaction, member: discord.Member = None):
+# =====================
+# COMMANDES
+# =====================
+
+@bot.command()
+async def hug(ctx, member: discord.Member = None):
     gif = random.choice(hugs)
 
     if member:
-        message = f"{interaction.user.mention} Fait un gros câlin à {member.mention} !"
+        message = f"{ctx.author.mention} Fait un gros câlin à {member.mention} !"
     else:
-        message = f"{interaction.user.mention} Fait un gros câlin."
+        message = f"{ctx.author.mention} Fait un gros câlin."
 
-    await interaction.response.send_message(message)
-    await interaction.followup.send(gif)
+    await ctx.send(message)
+    await ctx.send(gif)
 
-@bot.tree.command(name="smile", description="Sourire")
-async def smile(interaction: discord.Interaction, member: discord.Member = None):
+
+@bot.command()
+async def smile(ctx, member: discord.Member = None):
     gif = random.choice(smiles)
 
     if member:
-        message = f"{interaction.user.mention} Sourit pour {member.mention} !"
+        message = f"{ctx.author.mention} Sourit pour {member.mention} !"
     else:
-        message = f"{interaction.user.mention} Sourit."
+        message = f"{ctx.author.mention} Sourit."
 
-    await interaction.response.send_message(message)
-    await interaction.followup.send(gif)
+    await ctx.send(message)
+    await ctx.send(gif)
 
-@bot.tree.command(name="slap", description="Donner une claque")
-async def slap(interaction: discord.Interaction, member: discord.Member = None):
+
+@bot.command()
+async def slap(ctx, member: discord.Member = None):
     gif = random.choice(slaps)
 
     if member:
-        message = f"{interaction.user.mention} Donne une claque à {member.mention} !"
+        message = f"{ctx.author.mention} Donne une claque à {member.mention} !"
     else:
-        message = f"{interaction.user.mention} donne une claque dans le vide."
+        message = f"{ctx.author.mention} donne une claque dans le vide."
 
-    await interaction.response.send_message(message)
-    await interaction.followup.send(gif)
+    await ctx.send(message)
+    await ctx.send(gif)
 
-@bot.tree.command(name="cry", description="Pleurer")
-async def cry(interaction: discord.Interaction, member: discord.Member = None):
+
+@bot.command()
+async def cry(ctx, member: discord.Member = None):
     gif = random.choice(cries)
 
     if member:
-        message = f"{interaction.user.mention} Pleure pour {member.mention}..."
+        message = f"{ctx.author.mention} Pleure pour {member.mention}..."
     else:
-        message = f"{interaction.user.mention} Pleure..."
+        message = f"{ctx.author.mention} Pleure..."
 
-    await interaction.response.send_message(message)
-    await interaction.followup.send(gif)
+    await ctx.send(message)
+    await ctx.send(gif)
 
-@bot.tree.command(name="pat", description="Tapoter quelqu'un")
-async def pat(interaction: discord.Interaction, member: discord.Member = None):
+
+@bot.command()
+async def pat(ctx, member: discord.Member = None):
     gif = random.choice(pats)
 
     if member:
-        message = f"{interaction.user.mention} Tapote {member.mention} !"
+        message = f"{ctx.author.mention} Tapote {member.mention} !"
     else:
-        message = f"{interaction.user.mention} Tapote."
+        message = f"{ctx.author.mention} Tapote."
 
-    await interaction.response.send_message(message)
-    await interaction.followup.send(gif)
+    await ctx.send(message)
+    await ctx.send(gif)
 
-@bot.tree.command(name="coinflip", description="Pile ou face")
-async def coinflip(interaction: discord.Interaction):
-    result = random.choice(["Pile !", "Face !"])
-    await interaction.response.send_message(result)
 
-@bot.tree.command(name="love", description="Calculer la compatibilité entre deux personnes")
+@bot.command()
+async def coinflip(ctx):
+    result = random.choice(["Pile", "Face"])
+    await ctx.send(f"La pièce tombe sur : **{result}**")
+
+# =====================
+# COMMANDE LOVE IMAGE
+# =====================
+
+@bot.tree.command(name="love", description="Voir la compatibilité entre deux personnes")
 async def love(interaction: discord.Interaction, user1: discord.Member, user2: discord.Member):
 
-    percent = random.randint(0,100)
+    percent = random.randint(0, 100)
 
     async with aiohttp.ClientSession() as session:
+        async with session.get(user1.display_avatar.url) as r:
+            avatar1 = Image.open(BytesIO(await r.read())).resize((180,180)).convert("RGBA")
 
-        async with session.get(user1.display_avatar.url) as resp:
-            avatar1 = Image.open(io.BytesIO(await resp.read())).resize((128,128))
+        async with session.get(user2.display_avatar.url) as r:
+            avatar2 = Image.open(BytesIO(await r.read())).resize((180,180)).convert("RGBA")
 
-        async with session.get(user2.display_avatar.url) as resp:
-            avatar2 = Image.open(io.BytesIO(await resp.read())).resize((128,128))
+    width = 800
+    height = 300
 
-    image = Image.new("RGB",(400,200),(30,30,30))
+    background = Image.new("RGBA",(width,height),(0,0,0,0))
+    draw = ImageDraw.Draw(background)
 
-    image.paste(avatar1,(20,36))
-    image.paste(avatar2,(252,36))
+    for y in range(height):
+        r = int(80 + (y/height)*40)
+        g = int(120 + (y/height)*60)
+        b = 200
+        draw.line((0,y,width,y),fill=(r,g,b))
 
-    draw = ImageDraw.Draw(image)
+    def round_avatar(img):
+        mask = Image.new("L", img.size, 0)
+        draw_mask = ImageDraw.Draw(mask)
+        draw_mask.ellipse((0,0,img.size[0],img.size[1]),fill=255)
 
-    text = f"❤️ {percent}% ❤️"
+        result = Image.new("RGBA",img.size)
+        result.paste(img,(0,0),mask)
+        return result
 
-    draw.text((150,80),text,fill=(255,255,255))
+    avatar1 = round_avatar(avatar1)
+    avatar2 = round_avatar(avatar2)
 
-    buffer = io.BytesIO()
-    image.save(buffer,"PNG")
+    background.paste(avatar1,(80,60),avatar1)
+    background.paste(avatar2,(540,60),avatar2)
+
+    heart = Image.new("RGBA",(140,120),(0,0,0,0))
+    heart_draw = ImageDraw.Draw(heart)
+
+    heart_draw.polygon([
+        (70,110),
+        (10,50),
+        (30,10),
+        (70,40),
+        (110,10),
+        (130,50)
+    ], fill=(255,80,120))
+
+    background.paste(heart,(330,90),heart)
+
+    try:
+        font = ImageFont.truetype("arial.ttf",40)
+    except:
+        font = ImageFont.load_default()
+
+    text = f"{percent}%"
+
+    bbox = draw.textbbox((0,0),text,font=font)
+    tw = bbox[2]-bbox[0]
+
+    draw.text((400-tw/2,130),text,fill="white",font=font)
+
+    buffer = BytesIO()
+    background.save(buffer,"PNG")
     buffer.seek(0)
 
-    file = discord.File(buffer,filename="love.png")
+    file = discord.File(buffer,"love.png")
 
-    await interaction.response.send_message(f"{user1.mention} ❤️ {user2.mention}",file=file)
+    await interaction.response.send_message(file=file)
+
+# =====================
+# LANCEMENT
+# =====================
 
 bot.run(TOKEN)
