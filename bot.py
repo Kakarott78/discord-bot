@@ -65,6 +65,21 @@ async def on_ready():
     await bot.tree.sync()
 
 # =====================
+# DÉTECTION MOT "DIANNA"
+# =====================
+
+@bot.event
+async def on_message(message):
+
+    if message.author.bot:
+        return
+
+    if "dianna" in message.content.lower():
+        await message.reply("Princesse Dianna tu veux dire plutôt ☺️?")
+
+    await bot.process_commands(message)
+
+# =====================
 # COMMANDES !
 # =====================
 
