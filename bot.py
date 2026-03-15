@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import random
 import os
+from datetime import timedelta
 
 # Récupération du token depuis Railway ou ton PC
 TOKEN = os.getenv("TOKEN")
@@ -144,63 +145,138 @@ async def coinflip(ctx):
     await ctx.send(result)
 
 # =====================
+# MODERATION !
+# =====================
+
+@bot.command()
+@commands.has_permissions(kick_members=True)
+async def kick(ctx, member: discord.Member, *, reason="Aucune raison"):
+    await member.kick(reason=reason)
+    await ctx.send(f"{member.mention} a été expulsé. Raison : {reason}")
+
+@bot.command()
+@commands.has_permissions(ban_members=True)
+async def ban(ctx, member: discord.Member, *, reason="Aucune raison"):
+    await member.ban(reason=reason)
+    await ctx.send(f"{member.mention} a été banni. Raison : {reason}")
+
+@bot.command()
+@commands.has_permissions(ban_members=True)
+async def unban(ctx, user_id: int):
+    user = await bot.fetch_user(user_id)
+    await ctx.guild.unban(user)
+    await ctx.send(f"{user.name} a été débanni.")
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount: int):
+    await ctx.channel.purge(limit=amount + 1)
+    await ctx.send(f"{amount} messages supprimés.", delete_after=5)
+
+@bot.command()
+@commands.has_permissions(moderate_members=True)
+async def timeout(ctx, member: discord.Member, minutes: int, *, reason="Aucune raison"):
+    duration = discord.utils.utcnow() + timedelta(minutes=minutes)
+    await member.timeout(duration, reason=reason)
+    await ctx.send(f"{member.mention} est mute pendant {minutes} minutes. Raison : {reason}")
+
+@bot.command()
+@commands.has_permissions(moderate_members=True)
+async def untimeout(ctx, member: discord.Member):
+    await member.timeout(None)
+    await ctx.send(f"{member.mention} n'est plus mute.")
+
+# =====================
 # COMMANDES /
 # =====================
 
 @bot.tree.command(name="hug", description="Faire un câlin")
 async def hug_slash(interaction: discord.Interaction, member: discord.Member = None):
     gif = random.choice(hugs)
-    if member:
-        message = f"{interaction.user.mention} Fait un gros câlin à {member.mention} !"
-    else:
-        message = f"{interaction.user.mention} Fait un gros câlin."
-    await interaction.response.send_message(message)
+    msg = f"{interaction.user.mention} Fait un gros câlin à {member.mention} !" if member else f"{interaction.user.mention} Fait un gros câlin."
+    await interaction.response.send_message(msg)
     await interaction.followup.send(gif)
 
 @bot.tree.command(name="smile", description="Sourire")
 async def smile_slash(interaction: discord.Interaction, member: discord.Member = None):
     gif = random.choice(smiles)
-    if member:
-        message = f"{interaction.user.mention} Sourit pour {member.mention} !"
-    else:
-        message = f"{interaction.user.mention} Sourit."
-    await interaction.response.send_message(message)
+    msg = f"{interaction.user.mention} Sourit pour {member.mention} !" if member else f"{interaction.user.mention} Sourit."
+    await interaction.response.send_message(msg)
     await interaction.followup.send(gif)
 
 @bot.tree.command(name="slap", description="Donner une claque")
 async def slap_slash(interaction: discord.Interaction, member: discord.Member = None):
     gif = random.choice(slaps)
-    if member:
-        message = f"{interaction.user.mention} Donne une claque à {member.mention} !"
-    else:
-        message = f"{interaction.user.mention} donne une claque dans le vide."
-    await interaction.response.send_message(message)
+    msg = f"{interaction.user.mention} Donne une claque à {member.mention} !" if member else f"{interaction.user.mention} donne une claque dans le vide."
+    await interaction.response.send_message(msg)
     await interaction.followup.send(gif)
 
 @bot.tree.command(name="cry", description="Pleurer")
 async def cry_slash(interaction: discord.Interaction, member: discord.Member = None):
     gif = random.choice(cries)
-    if member:
-        message = f"{interaction.user.mention} Pleure pour {member.mention}..."
-    else:
-        message = f"{interaction.user.mention} Pleure..."
-    await interaction.response.send_message(message)
+    msg = f"{interaction.user.mention} Pleure pour {member.mention}..." if member else f"{interaction.user.mention} Pleure..."
+    await interaction.response.send_message(msg)
     await interaction.followup.send(gif)
 
 @bot.tree.command(name="pat", description="Tapoter quelqu'un")
 async def pat_slash(interaction: discord.Interaction, member: discord.Member = None):
     gif = random.choice(pats)
-    if member:
-        message = f"{interaction.user.mention} Tapote {member.mention} !"
-    else:
-        message = f"{interaction.user.mention} Tapote."
-    await interaction.response.send_message(message)
+    msg = f"{interaction.user.mention} Tapote {member.mention} !" if member else f"{interaction.user.mention} Tapote."
+    await interaction.response.send_message(msg)
     await interaction.followup.send(gif)
 
 @bot.tree.command(name="coinflip", description="Pile ou face")
 async def coinflip_slash(interaction: discord.Interaction):
     result = random.choice(["Pile !", "Face !"])
     await interaction.response.send_message(result)
+
+# =====================
+# MODERATION /
+# =====================
+
+@bot.tree.command(name="kick", description="Expulser un membre")
+async def kick_slash(interaction: discord.Interaction, member: discord.Member, reason: str = "Aucune raison"):
+    if not interaction.user.guild_permissions.kick_members:
+        return await interaction.response.send_message("Permission refusée.", ephemeral=True)
+    await member.kick(reason=reason)
+    await interaction.response.send_message(f"{member.mention} a été expulsé. Raison : {reason}")
+
+@bot.tree.command(name="ban", description="Bannir un membre")
+async def ban_slash(interaction: discord.Interaction, member: discord.Member, reason: str = "Aucune raison"):
+    if not interaction.user.guild_permissions.ban_members:
+        return await interaction.response.send_message("Permission refusée.", ephemeral=True)
+    await member.ban(reason=reason)
+    await interaction.response.send_message(f"{member.mention} a été banni. Raison : {reason}")
+
+@bot.tree.command(name="unban", description="Débannir via ID")
+async def unban_slash(interaction: discord.Interaction, user_id: str):
+    if not interaction.user.guild_permissions.ban_members:
+        return await interaction.response.send_message("Permission refusée.", ephemeral=True)
+    user = await bot.fetch_user(int(user_id))
+    await interaction.guild.unban(user)
+    await interaction.response.send_message(f"{user.name} a été débanni.")
+
+@bot.tree.command(name="clear", description="Supprimer des messages")
+async def clear_slash(interaction: discord.Interaction, amount: int):
+    if not interaction.user.guild_permissions.manage_messages:
+        return await interaction.response.send_message("Permission refusée.", ephemeral=True)
+    await interaction.channel.purge(limit=amount)
+    await interaction.response.send_message(f"{amount} messages supprimés.", ephemeral=True)
+
+@bot.tree.command(name="timeout", description="Mute temporaire")
+async def timeout_slash(interaction: discord.Interaction, member: discord.Member, minutes: int, reason: str = "Aucune raison"):
+    if not interaction.user.guild_permissions.moderate_members:
+        return await interaction.response.send_message("Permission refusée.", ephemeral=True)
+    duration = discord.utils.utcnow() + timedelta(minutes=minutes)
+    await member.timeout(duration, reason=reason)
+    await interaction.response.send_message(f"{member.mention} mute pendant {minutes} minutes.")
+
+@bot.tree.command(name="untimeout", description="Retirer le mute")
+async def untimeout_slash(interaction: discord.Interaction, member: discord.Member):
+    if not interaction.user.guild_permissions.moderate_members:
+        return await interaction.response.send_message("Permission refusée.", ephemeral=True)
+    await member.timeout(None)
+    await interaction.response.send_message(f"{member.mention} n'est plus mute.")
 
 # =====================
 # LANCEMENT
