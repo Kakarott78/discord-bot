@@ -64,7 +64,11 @@ pats = [
 @bot.event
 async def on_ready():
     print(f"Connecté en tant que {bot.user}")
-    await bot.tree.sync()
+    try:
+        await bot.tree.sync()
+        print("Commandes slash synchronisées")
+    except Exception as e:
+        print(e)
 
 # =====================
 # HELP
