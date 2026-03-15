@@ -175,10 +175,10 @@ async def clear(ctx, amount: int):
 
 @bot.command()
 @commands.has_permissions(moderate_members=True)
-async def timeout(ctx, member: discord.Member, minutes: int, *, reason="Aucune raison"):
-    duration = discord.utils.utcnow() + timedelta(minutes=minutes)
-    await member.timeout(duration, reason=reason)
-    await ctx.send(f"{member.mention} est mute pendant {minutes} minutes. Raison : {reason}")
+async def timeout(ctx, member: discord.Member, time: int, *, raison="Aucune raison"):
+    duration = discord.utils.utcnow() + timedelta(minutes=time)
+    await member.timeout(duration, reason=raison)
+    await ctx.send(f"{member.mention} est mute pendant {time} minutes. Raison : {raison}")
 
 @bot.command()
 @commands.has_permissions(moderate_members=True)
@@ -264,12 +264,13 @@ async def clear_slash(interaction: discord.Interaction, amount: int):
     await interaction.response.send_message(f"{amount} messages supprimés.", ephemeral=True)
 
 @bot.tree.command(name="timeout", description="Mute temporaire")
-async def timeout_slash(interaction: discord.Interaction, member: discord.Member, minutes: int, reason: str = "Aucune raison"):
+async def timeout_slash(interaction: discord.Interaction, member: discord.Member, time: int, raison: str = "Aucune raison"):
     if not interaction.user.guild_permissions.moderate_members:
         return await interaction.response.send_message("Permission refusée.", ephemeral=True)
-    duration = discord.utils.utcnow() + timedelta(minutes=minutes)
-    await member.timeout(duration, reason=reason)
-    await interaction.response.send_message(f"{member.mention} mute pendant {minutes} minutes.")
+
+    duration = discord.utils.utcnow() + timedelta(minutes=time)
+    await member.timeout(duration, reason=raison)
+    await interaction.response.send_message(f"{member.mention} mute pendant {time} minutes. Raison : {raison}")
 
 @bot.tree.command(name="untimeout", description="Retirer le mute")
 async def untimeout_slash(interaction: discord.Interaction, member: discord.Member):
