@@ -66,6 +66,85 @@ async def on_ready():
     await bot.tree.sync()
 
 # =====================
+# HELP
+# =====================
+
+@bot.command()
+async def help(ctx):
+
+    embed = discord.Embed(
+        title="Commandes du bot",
+        description="Voici toutes les commandes disponibles",
+        color=discord.Color.blue()
+    )
+
+    embed.add_field(
+        name="🎭 Commandes Fun",
+        value="""
+!hug /hug
+!smile /smile
+!slap /slap
+!cry /cry
+!pat /pat
+!coinflip /coinflip
+""",
+        inline=False
+    )
+
+    embed.add_field(
+        name="🛡️ Commandes Modération",
+        value="""
+!kick /kick
+!ban /ban
+!unban /unban
+!clear /clear
+!timeout /timeout
+!untimeout /untimeout
+""",
+        inline=False
+    )
+
+    await ctx.send(embed=embed)
+
+
+@bot.tree.command(name="help", description="Afficher les commandes du bot")
+async def help_slash(interaction: discord.Interaction):
+
+    embed = discord.Embed(
+        title="Commandes du bot",
+        description="Voici toutes les commandes disponibles",
+        color=discord.Color.blue()
+    )
+
+    embed.add_field(
+        name="🎭 Commandes Fun",
+        value="""
+/hug
+/smile
+/slap
+/cry
+/pat
+/coinflip
+""",
+        inline=False
+    )
+
+    embed.add_field(
+        name="🛡️ Commandes Modération",
+        value="""
+/kick
+/ban
+/unban
+/clear
+/timeout
+/untimeout
+""",
+        inline=False
+    )
+
+    await interaction.response.send_message(embed=embed)
+
+# =====================
 # DÉTECTION MOTS
 # =====================
 
