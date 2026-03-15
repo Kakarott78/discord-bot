@@ -12,7 +12,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 # Création du bot
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
 
 # =====================
 # LISTES DE GIFS
