@@ -65,7 +65,7 @@ async def on_ready():
     await bot.tree.sync()
 
 # =====================
-# DÉTECTION MOT "DIANNA"
+# DÉTECTION MOTS
 # =====================
 
 @bot.event
@@ -74,8 +74,13 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    if "dianna" in message.content.lower():
+    contenu = message.content.lower()
+
+    if "dianna" in contenu:
         await message.reply("Princesse Dianna tu veux dire plutôt ☺️?")
+
+    if "kakarot" in contenu:
+        await message.reply("Mon maître !")
 
     await bot.process_commands(message)
 
