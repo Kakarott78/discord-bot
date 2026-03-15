@@ -10,6 +10,7 @@ TOKEN = os.getenv("TOKEN")
 # Intents nécessaires
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 # Création du bot
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
@@ -79,8 +80,8 @@ async def help(ctx):
     )
 
     embed.add_field(
-        name="🎭 Commandes Fun",
-        value="""
+name="🎭 Commandes Fun",
+value="""
 !hug /hug
 !smile /smile
 !slap /slap
@@ -88,6 +89,8 @@ async def help(ctx):
 !pat /pat
 !coinflip /coinflip
 !rate /rate
+!love /love
+!avatar /avatar
 """,
         inline=False
     )
@@ -119,7 +122,7 @@ async def help_slash(interaction: discord.Interaction):
 
     embed.add_field(
         name="🎭 Commandes Fun",
-        value="""
+value="""
 /hug
 /smile
 /slap
@@ -127,6 +130,8 @@ async def help_slash(interaction: discord.Interaction):
 /pat
 /coinflip
 /rate
+/love
+/avatar
 """,
         inline=False
     )
@@ -230,6 +235,33 @@ async def rate(ctx, *, chose: str):
     note = random.randint(0, 10)
     await ctx.send(f"⭐ Je donne à **{chose}** la note de **{note}/10** !")
 
+@bot.command()
+async def avatar(ctx, member: discord.Member = None):
+    member = member or ctx.author
+
+    embed = discord.Embed(
+        title=f"Avatar de {member.name}",
+        color=discord.Color.blue()
+    )
+
+    embed.set_image(url=member.display_avatar.url)
+
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+async def love(ctx, member1: discord.Member, member2: discord.Member):
+
+    pourcentage = random.randint(0, 100)
+
+    embed = discord.Embed(
+        title="💖 Calcul d'amour 💖",
+        description=f"{member1.mention} ❤️ {member2.mention}\nCompatibilité : **{pourcentage}%**",
+        color=discord.Color.pink()
+    )
+
+    await ctx.send(embed=embed)
+
 # =====================
 # MODERATION !
 # =====================
@@ -324,6 +356,35 @@ async def rate_slash(interaction: discord.Interaction, chose: str):
     await interaction.response.send_message(
         f"⭐ Je donne à **{chose}** la note de **{note}/10** !"
     )
+
+
+@bot.tree.command(name="avatar", description="Afficher l'avatar d'un membre")
+async def avatar_slash(interaction: discord.Interaction, member: discord.Member = None):
+
+    member = member or interaction.user
+
+    embed = discord.Embed(
+        title=f"Avatar de {member.name}",
+        color=discord.Color.blue()
+    )
+
+    embed.set_image(url=member.display_avatar.url)
+
+    await interaction.response.send_message(embed=embed)
+
+
+@bot.tree.command(name="love", description="Calculer la compatibilité entre deux personnes")
+async def love_slash(interaction: discord.Interaction, member1: discord.Member, member2: discord.Member):
+
+    pourcentage = random.randint(0, 100)
+
+    embed = discord.Embed(
+        title="💖 Calcul d'amour 💖",
+        description=f"{member1.mention} ❤️ {member2.mention}\nCompatibilité : **{pourcentage}%**",
+        color=discord.Color.pink()
+    )
+
+    await interaction.response.send_message(embed=embed)
 # =====================
 # MODERATION /
 # =====================
