@@ -87,6 +87,7 @@ async def help(ctx):
 !cry /cry
 !pat /pat
 !coinflip /coinflip
+!rate /rate
 """,
         inline=False
     )
@@ -125,6 +126,7 @@ async def help_slash(interaction: discord.Interaction):
 /cry
 /pat
 /coinflip
+/rate
 """,
         inline=False
     )
@@ -223,6 +225,11 @@ async def coinflip(ctx):
     result = random.choice(["Pile !", "Face !"])
     await ctx.send(result)
 
+@bot.command()
+async def rate(ctx, *, chose: str):
+    note = random.randint(0, 10)
+    await ctx.send(f"⭐ Je donne à **{chose}** la note de **{note}/10** !")
+
 # =====================
 # MODERATION !
 # =====================
@@ -309,6 +316,14 @@ async def coinflip_slash(interaction: discord.Interaction):
     result = random.choice(["Pile !", "Face !"])
     await interaction.response.send_message(result)
 
+@bot.tree.command(name="rate", description="Noter quelque chose sur 10")
+async def rate_slash(interaction: discord.Interaction, chose: str):
+
+    note = random.randint(0, 10)
+
+    await interaction.response.send_message(
+        f"⭐ Je donne à **{chose}** la note de **{note}/10** !"
+    )
 # =====================
 # MODERATION /
 # =====================
